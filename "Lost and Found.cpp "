@@ -1,0 +1,616 @@
+//***************************************************************
+//                   HEADER FILE USED IN PROJECT
+//****************************************************************
+#include<iostream>
+#include<stdlib.h>
+#include<fstream>
+#include<conio.h>
+#include<process.h>
+#include<string.h>
+#include<iomanip>
+#include<windows.h> //  header file for gotoxy
+#include <stdio.h>     //header file for standard input output
+
+using namespace std;
+
+//***************************************************************
+//                   CLASS USED IN PROJECT
+//****************************************************************
+
+
+COORD coord={0,0}; // this is global variable
+                                    //center of axis is set to the top left cornor of the screen
+
+ void gotoxy(int x,int y)
+ {
+   coord.X=x;
+ coord.Y=y;
+ SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),coord);
+ }
+
+class found
+{
+	char f_no[6];
+	char f_name[50];
+	char item_name[20];
+  public:
+	void create_found()
+	{
+		cout<<"\nNEW FOUND ENTRY...\n";
+		cout<<"\nEnter The Finder no.";
+		cin>>f_no;
+		cout<<"\n\nEnter The Name of The Finder : ";
+		fflush(stdin);
+		gets(f_name);
+		cout<<"\n\nEnter The Item Name ";
+		fflush(stdin);
+		gets(item_name);
+		cout<<"\n\n\nNew Record created successfully ..";
+	}
+
+	void show_found()
+	{
+		cout<<"\nFinder no. : "<<f_no;
+		cout<<"\nFinder Name : ";
+		puts(f_name);
+		cout<<"Item Name : ";
+		puts(item_name);
+	}
+
+	void modify_found()
+	{
+		cout<<"\nFinder no.. : "<<f_no;
+		cout<<"\nModify Finder Name : ";
+		fflush(stdin);
+		gets(f_name);
+		cout<<"\nModify Item Name  : ";
+		fflush(stdin);
+		gets(item_name);
+	}
+
+	char* retfno()
+	{
+		return f_no;
+	}
+
+	void report()
+	{cout<<f_no<<setw(30)<<f_name<<setw(30)<<item_name<<endl;}
+
+
+};         //class ends here
+
+
+
+
+class lost
+{
+	char lno[10];
+	char l_name[20];
+	char iname[50];
+public:
+	void create_lost()
+	{
+		system("cls");
+	 	cout<<"\nNEW  ENTRY...\n";
+		cout<<"\nEnter The item number. ";
+		cin>>lno;
+		cout<<"\n\nEnter The Name... : ";
+        fflush(stdin);
+		gets(l_name);
+		cout<<"\n\nEnter Item Description..";
+		fflush(stdin);
+		gets(iname);
+		cout<<"\n\nRecord Created Sucessfully...";
+	}
+
+	void show_lost()
+	{
+		cout<<"\nItem number. : "<<lno;
+		cout<<"\nOwner Name : ";
+		puts(l_name);
+		cout<<"\nItem Description... : ";
+		puts(iname);}
+
+	void modify_lost()
+	{
+		cout<<"\nItem number. : "<<lno;
+		cout<<"\nModify Owner Name : ";
+		fflush(stdin);
+		gets(l_name);
+		cout<<"\n\nEnter Item Description..";
+		fflush(stdin);
+		gets(iname);
+
+	}
+
+	char* retlno()
+	{
+		return lno;
+	}
+
+
+
+	void report()
+	{
+	    cout<<"\t"<<lno<<setw(20)<<l_name<<setw(10)<<iname<<endl;
+    }
+
+};         //class ends here
+
+
+
+
+//***************************************************************
+//    	global declaration for stream object, object
+//****************************************************************
+
+fstream fp,fp1;
+found fd;
+lost lt;
+
+
+//***************************************************************
+//    	function to write in file
+//****************************************************************
+
+void write_found()
+{
+	char ch;
+	fp.open("found.dat",ios::out|ios::app);
+	do
+	{
+		system("cls");
+		fd.create_found();
+		fp.write((char*)&fd,sizeof(found));
+		cout<<"\n\nDo you want to add more record..(y/n?)";
+		cin>>ch;
+	}while(ch=='y'||ch=='Y');
+	fp.close();
+}
+
+void write_lost()
+{
+	char ch;
+	fp.open("lost.dat",ios::out|ios::app);
+	do
+	{
+		lt.create_lost();
+		fp.write((char*)&lt,sizeof(lost));
+		cout<<"\n\ndo you want to add more record..(y/n?)";
+		cin>>ch;
+	}while(ch=='y'||ch=='Y');
+	fp.close();
+}
+
+
+//***************************************************************
+//    	function to read specific record from file
+//****************************************************************
+
+
+void display_found(char n[])
+{
+	cout<<"\nFOUND DETAILS\n";
+	int flag=0;
+	fp.open("found.dat",ios::in);
+	while(fp.read((char*)&fd,sizeof(found)))
+	{
+		if(strcmpi(fd.retfno(),n)==0)
+		{
+			fd.show_found();
+		 	flag=1;
+		}
+	}
+
+	fp.close();
+	if(flag==0)
+		cout<<"\n\nBook does not exist";
+	getch();
+}
+
+void display_lost(char n[])
+{
+	cout<<"\nSTUDENT DETAILS\n";
+	int flag=0;
+	fp.open("lost.dat",ios::in);
+	while(fp.read((char*)&lt,sizeof(lost)))
+	{
+		if((strcmpi(lt.retlno(),n)==0))
+		{
+			lt.show_lost();
+			flag=1;
+		}
+	}
+
+	fp.close();
+	if(flag==0)
+    		cout<<"\n\nStudent does not exist";
+ 	getch();
+}
+
+
+//***************************************************************
+//    	function to modify record of file
+//****************************************************************
+
+
+void modify_found()
+{
+	char n[6];
+	int found=0;
+	system("cls");
+	cout<<"\n\n\tMODIFY FOUND REOCORD.... ";
+	cout<<"\n\n\tEnter The FOUND ID ...";
+	cin>>n;
+	fp.open("found.dat",ios::in|ios::out);
+	while(fp.read((char*)&fd,sizeof(found)) && found==0)
+	{
+		if(strcmpi(fd.retfno(),n)==0)
+		{
+			fd.show_found();
+			cout<<"\nEnter The New Details of book"<<endl;
+			fd.modify_found();
+			int pos=-1*sizeof(fd);
+		    	fp.seekp(pos,ios::cur);
+		    	fp.write((char*)&fd,sizeof(found));
+		    	cout<<"\n\n\t Record Updated";
+		    	found=1;
+		}
+	}
+
+    	fp.close();
+    	if(found==0)
+    		cout<<"\n\n Record Not Found ";
+    	getch();
+}
+
+
+void modify_lost()
+{
+	char n[6];
+	int found=0;
+	system("cls");
+	cout<<"\n\n\tMODIFY LOST ITEM RECORD... ";
+	cout<<"\n\n\tEnter The LOST ITEM number...";
+	cin>>n;
+	fp.open("lost.dat",ios::in|ios::out);
+	while(fp.read((char*)&lt,sizeof(lost)) && found==0)
+	{
+		if(strcmpi(lt.retlno(),n)==0)
+		{
+			lt.show_lost();
+			cout<<"\nEnter The New Details of Lost Item"<<endl;
+			lt.modify_lost();
+			int pos=-1*sizeof(lt);
+			fp.seekp(pos,ios::cur);
+			fp.write((char*)&lt,sizeof(lost));
+			cout<<"\n\n\t Record Updated";
+			found=1;
+		}
+	}
+
+	fp.close();
+	if(found==0)
+		cout<<"\n\n Record Not Found ";
+	getch();
+}
+
+//***************************************************************
+//    	function to delete record of file
+//****************************************************************
+
+
+void delete_lost()
+{
+	char n[6];
+	int flag=0;
+	system("cls");
+    	cout<<"\n\n\n\tDELETE LOST ITEM  ...";
+    	cout<<"\n\nEnter The LOST ITEM NUMBER You Want To Delete : ";
+    	cin>>n;
+    	fp.open("lost.dat",ios::in|ios::out);
+    	fstream fp2;
+    	fp2.open("Temp.dat",ios::out);
+    	fp.seekg(0,ios::beg);
+    	while(fp.read((char*)&lt,sizeof(lost)))
+	{
+		if(strcmpi(lt.retlno(),n)!=0)
+	     		fp2.write((char*)&lt,sizeof(lost));
+		else
+	   		flag=1;
+	}
+
+	fp2.close();
+    	fp.close();
+    	remove("lost.dat");
+    	rename("Temp.dat","lost.dat");
+    	if(flag==1)
+     		cout<<"\n\n\tRecord Deleted ..";
+    	else
+     		cout<<"\n\nRecord not found";
+    	getch();
+}
+
+
+void delete_found()
+{
+	char n[6];
+	int flag=0;
+	system("cls");
+	cout<<"\n\n\n\tDELETE FOUND ITEM  ...";
+	cout<<"\n\nEnter The FOUND ITEM NUMBER You Want To Delete : ";
+	cin>>n;
+	fp.open("found.dat",ios::in|ios::out);
+	fstream fp2;
+	fp2.open("Temp.dat",ios::out);
+	fp.seekg(0,ios::beg);
+	while(fp.read((char*)&fd,sizeof(found)))
+	{
+		if(strcmpi(fd.retfno(),n)!=0)
+		{
+			fp2.write((char*)&fd,sizeof(found));
+		}
+		else
+            flag =1;
+	}
+
+	fp2.close();
+    	fp.close();
+    	remove("found.dat");
+    	rename("Temp.dat","found.dat");
+    	if(flag==1)
+    	cout<<"\n\n\tRecord Deleted ..";
+    	else
+        cout<<"\n\nRecord Not Found...";
+    	getch();
+}
+
+
+
+//***************************************************************
+//    	function to display all Lost Item list
+//****************************************************************
+
+void display_alllost()
+{
+	system("cls");
+     	fp.open("lost.dat",ios::in);
+     	if(!fp)
+     	{
+       		cout<<"ERROR!!! FILE COULD NOT BE OPEN ";
+       		getch();
+       		return;
+     	}
+
+	cout<<"\n\n\t\tLOST ITEM LIST\n\n";
+	cout<<"==================================================================\n";
+	cout<<"\tIno."<<setw(10)<<"Owner Name"<<setw(20)<<"Item Description\n";
+	cout<<"==================================================================\n";
+
+	while(fp.read((char*)&lt,sizeof(lost)))
+	{
+		lt.report();
+	}
+
+	fp.close();
+	getch();
+}
+
+
+//***************************************************************
+//    	function to display Found item list
+//****************************************************************
+
+void display_allfound()
+{
+	system("cls");
+	fp.open("found.dat",ios::in);
+	if(!fp)
+	{
+		cout<<"ERROR!!! FILE COULD NOT BE OPEN ";
+       		getch();
+       		return;
+     	}
+
+	cout<<"\n\n\t\tFOUND ITEM LIST\n\n";
+	cout<<"=========================================================================\n";
+	cout<<"Find item Number"<<setw(20)<<" Founder Name"<<setw(25)<<"Item name\n";
+	cout<<"=========================================================================\n";
+
+	while(fp.read((char*)&fd,sizeof(found)))
+	{
+		fd.report();
+	}
+     	fp.close();
+     	getch();
+}
+
+
+
+//***************************************************************
+//    	function to handded over the item to the owner ...
+//****************************************************************
+
+void handover()
+{
+	char ln[6],fn[6];
+	int found=0,flag=0;
+	system("cls");
+	cout<<"\n\nHAND OVER THE ITEM TO THE OWNER OF THE ITEM ...";
+	cout<<"\n\n\tEnter The LOST ITEM  Number.";
+	cin>>ln;
+	fp.open("lost.dat",ios::in|ios::out);
+    	fp1.open("found.dat",ios::in|ios::out);
+    	while(fp.read((char*)&lt,sizeof(lost)) && found==0)
+       	{
+		if(strcmpi(lt.retlno(),ln)==0)
+		{
+			found=1;
+                cout<<"\n\n\tEnter the FIND ITEM Number ";
+				cin>>fn;
+				while(fp1.read((char*)&fd,sizeof(found))&& flag==0)
+				{
+			   		if(strcmpi(fd.retfno(),fn)==0)
+					{
+						fd.show_found();
+
+						 fstream fp2;
+                            fp2.open("Temp.dat",ios::out);
+                            fp1.seekg(0,ios::beg);
+                            while(fp1.read((char*)&fd,sizeof(found)))
+                            {
+                            if(strcmpi(fd.retfno(),fn)!=0)
+                            {
+                                fp2.write((char*)&fd,sizeof(found));
+                            }
+                            }
+
+                            fp2.close();
+
+                            remove("found.dat");
+                            rename("Temp.dat","found.dat");
+                            flag=1;
+
+                    }
+		    		}
+		  		if(flag==0)
+		    			cout<<"Item  does not Found...";
+                else
+		  		cout<<"Item Handed over successfully... ";
+
+			}
+
+		}
+      	if(found==0)
+		cout<<"Lost item record  does not exist...";
+	getch();
+  	fp.close();
+  	fp1.close();
+}
+
+//***************************************************************
+//    	function to deposit an item to be found
+//****************************************************************
+
+void item_deposit()
+{
+    write_found();
+}
+
+
+
+//***************************************************************
+//    	INTRODUCTION FUNCTION
+//****************************************************************
+
+void intro()
+{
+	system("cls");
+	gotoxy(15,5);
+	cout<<"LOST AND FOUND ";
+	cout<<"\n\n\n\n\nMADE BY : Dinesh Kumar Lodhi";
+    cout<<"\n\nROLL NO : 205112069";
+	cout<<"\n\nCOLLEGE : National institute of Technology Tirchy-65";
+	cout<<"\n\n\n\n Press any key to continue...";
+	getch();
+}
+
+
+
+//***************************************************************
+//    	ADMINISTRATOR MENU FUNCTION
+//****************************************************************
+
+void admin_menu()
+{
+	system("cls");
+	int ch2;
+	cout<<"\n\n\n\tADMINISTRATOR MENU";
+	cout<<"\n\n\t1.ADD AN  FOUND ITEM  ";
+	cout<<"\n\n\t2.DISPLAY ALL FOUND ITEM";
+	cout<<"\n\n\t3.DISPLAY SPECIFIC FOUND ITEM ";
+	cout<<"\n\n\t4.MODIFY FOUND ITEM RECORD";
+	cout<<"\n\n\t5.DELETE FOUND ITEM RECORD";
+	cout<<"\n\n\t6.ADD AN LOST ITEM  ";
+	cout<<"\n\n\t7.DISPLAY ALL LOST ITEM ";
+	cout<<"\n\n\t8.DISPLAY SPECIFIC LOST ITEM ";
+	cout<<"\n\n\t9.MODIFY LOST ITEM ";
+	cout<<"\n\n\t10.DELETE LOST ITEM RECORD ";
+	cout<<"\n\n\t11. HAND OVER AN ITEM TO THE OWNER ";
+	cout<<"\n\n\t12.BACK TO MAIN MENU";
+	cout<<"\n\n\tPlease Enter Your Choice (1-11) ";
+	cin>>ch2;
+	switch(ch2)
+	{
+    		case 1: system("cls");
+	    		write_found();break;
+    		case 2: display_allfound();break;
+    		case 3:
+	       		char num[6];
+	       		system("cls");
+	       		cout<<"\n\n\tPlease Enter The FOUND ITEM Number. ";
+	       		cin>>num;
+	       		display_found(num);
+	       		break;
+      		case 4: modify_found();break;
+      		case 5: delete_found();break;
+		case 6: system("cls");
+			write_lost();break;
+		case 7: display_alllost();break;
+		case 8: {
+	       		char num[6];
+	       		system("cls");
+	       		cout<<"\n\n\tPlease Enter The book No. ";
+	       		cin>>num;
+	       		display_lost(num);
+	       		break;
+			}
+      		case 9: modify_lost();break;
+      		case 10: delete_lost();break;
+     		case 11: handover(); break;
+     		case 12: return;
+      		default:cout<<"\a";
+   	}
+   	admin_menu();
+}
+
+
+//***************************************************************
+//    	THE MAIN FUNCTION OF PROGRAM
+//****************************************************************
+
+
+int main()
+{
+	char ch;
+	intro();
+	do
+	{
+		system("cls");
+		cout<<"\n\n\n\tMAIN MENU";
+		cout<<"\n\n\t01. LOST SOMETHING";
+		cout<<"\n\n\t02. FOUND SOMETHING";
+	  	cout<<"\n\n\t03. ADMINISTRATOR MENU";
+	  	cout<<"\n\n\t04. EXIT";
+	  	cout<<"\n\n\tPlease Select Your Option (1-4) ";
+	  	ch=getche();
+	  	switch(ch)
+	  	{
+			case '1':system("cls");
+				 write_lost();
+			   	 break;
+		  	case '2':
+                    item_deposit();
+			    	 break;
+		  	case '3':admin_menu();
+				 break;
+		  	case '4':exit(0);
+		  	default :cout<<"\a";
+		}
+    	}while(ch!='4');
+return 0;
+}
+
+//***************************************************************
+//    			END OF PROJECT
+//***************************************************************
