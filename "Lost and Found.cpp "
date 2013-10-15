@@ -90,6 +90,7 @@ class lost
 public:
 	void create_lost()
 	{
+	
 		system("cls");
 	 	cout<<"\nNEW  ENTRY...\n";
 		cout<<"\nEnter The item number. ";
