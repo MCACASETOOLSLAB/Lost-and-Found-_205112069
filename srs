@@ -1,0 +1,35 @@
+Lost and Found
+
+Software Requirements Specification
+
+Version 1.2
+
+Date :5/11/2013
+
+Dinesh Kumar Lodhi
+Roll No : 205112069
+MCA –III SEM
+			
+ 
+Introduction
+This is common problem of human being to forget or misplace the things. Many times in Annex, hostel, messes and many other places of campus we found a slip that I lost my pen drive /phone/notebook etc. 
+	So this application is intended for helping the people to finding their lost items or things. Some time it is found that somebody get something which has no importance for him but is very essential for the person who lost it.
+	Using this application individual can registered his complaint and if someone found anything he also registered information regarding the things he/she found. 
+	We can collect all the missing things in a place and handed over it to the person whoever lost it.
+Purpose
+The purpose of this SRS  is to help individuals to find their lost stuffs inside the campus .The main intention for this project is to help students to find their lost things . If somebody find the things he can handover it to the person who lost it using this system easily and I hope it will be convenient for both of the user (who find the stuffs or lost the stuffs) 
+Scope
+ (1) The system entitled “ lost and found “ has manages in such a way that it helps the students to find their lost stuffs . for this we maintain a list of found items and inform all the students by various source of communication like social networking site or we can message the users if their information available in database.
+(2)	It will help the individuals to find their stuffs by spreading the information into the whole campus  
+(3) The benefit of the system is if somebody find some stuffs anywhere in the campus then it could be handed over to the right person. 
+
+
+System Requirements:-
+Windows 98, XP, 2000, ME
+Intel Pentium IV 1.6GHz or above.
+512 RAM or above.
+Hard disk requirement of at least 200MB
+Display card supporting DirectDraw overlay 
+Minimal desktop resolution 1024x768 Recommended.
+
+
